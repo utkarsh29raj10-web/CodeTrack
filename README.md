@@ -20,3 +20,4 @@ This is a ...
 This is detailed information but the overall amount for each case is not significant. Thus, total AI usage will remain well under 15-20%
 - Project Development Plan
 - Initial guide to explain me how I can pull this off with hackatime
+- Taught myself basics of automated testing and AI acted as an example guide for first test

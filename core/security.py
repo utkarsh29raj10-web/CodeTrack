@@ -4,6 +4,7 @@ import logging
 from cryptography.fernet import Fernet
 from cryptography.exceptions import InvalidKey
 from dotenv import load_dotenv
+from cryptography.fernet import InvalidToken
 
 load_dotenv()
 
@@ -45,7 +46,24 @@ class SecurityManager:
             logging.error(f"Something went wrong during encryption: {e}")
             raise
 
-# Testing
+    def decrypt_payload(self, encrypted_string: str) -> dict:
+        if not encrypted_string:
+            raise ValueError("Encrypted string must have a value")
+
+        try:
+            decrypted_bytes = self.cipher_suite.decrypt(encrypted_string.encode('utf-8'))
+            payload_json = decrypted_bytes.decode('utf-8')
+            return json.loads(payload_json)
+
+        except InvalidToken:
+            logging.error("Failed to decrypt: Invalid or corrupted key")
+            raise ValueError("Invalid token. Please recehck the code or contact employer ")
+
+        except Exception as e:
+            logging.error(f"Something went wrong: {e}")
+            raise
+
+# Testing (Manual)
 if __name__ == "__main__":
     print("Testing SecurityManager encryption with .env key")
 
