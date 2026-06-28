@@ -11,12 +11,20 @@ class ConfigManager:
         self.home_dir = os.path.expanduser("~")
         self.config_path = os.path.join(self.home_dir, ".wakatime.cfg")
 
-    def write_config(self, api_key: str, api_url: str = "") -> bool:
+    def write_config(self, api_key: str, api_url: str = "", employee_name: str = "") -> bool:
+        import random
+        import string
+
         if not api_key:
             logging.error("Failed to write config: Please enter API key")
             raise ValueError("API key cannot be empty")
 
         final_url = api_url.strip() if api_url else self.DEFAULT_API_URL
+
+        final_hostname = employee_name.strip()
+        if not final_hostname:
+            random_suffix=''.join(random.choices(string.ascii_letters, k=6))
+            final_hostname = random_suffix
 
         config = configparser.ConfigParser()
 
@@ -31,6 +39,7 @@ class ConfigManager:
         config.set('settings', 'heartbeat_rate_limit_seconds', '30')
         config.set('settings', 'exclude_unknown_project', 'true')
         config.set('settings', 'hide_branch_names', 'true')
+        config.set('settings', 'hostname', final_hostname)
 
         try:
             with open(self.config_path, 'w') as configfile:

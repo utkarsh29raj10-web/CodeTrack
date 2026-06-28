@@ -24,13 +24,14 @@ class SecurityManager:
             logging.error(f"Failed to initialize Security Manger: Invalid key. {e}")
             raise
 
-    def encrypt_payload(self, raw_api_key: str, dashboard_url: str = "") -> str:
+    def encrypt_payload(self, raw_api_key: str, dashboard_url: str = "", employee_name: str = "") -> str:
         if not raw_api_key:
             raise ValueError("API key must have a value")
 
         payload_dict = {
             "key": raw_api_key.strip(),
-            "url": dashboard_url.strip() if dashboard_url else ""
+            "url": dashboard_url.strip() if dashboard_url else "",
+            "name": employee_name.strip() if employee_name else "",
         }
 
         try:
