@@ -4,4 +4,5 @@ customtkinter==6.0.0
 darkdetect==0.8.0
 packaging==26.2
 pycparser==2.23
+python-dotenv==1.2.1
 typing_extensions==4.15.0
