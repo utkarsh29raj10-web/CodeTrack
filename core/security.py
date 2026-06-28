@@ -23,13 +23,13 @@ class SecurityManager:
             logging.error(f"Failed to initialize Security Manger: Invalid key. {e}")
             raise
 
-    def encrypt_payload(self, raw_api_key: str, dashboard_url: str) -> str:
-        if not raw_api_key or not dashboard_url:
-            raise ValueError("API key or Dashboard URL must have a value")
+    def encrypt_payload(self, raw_api_key: str, dashboard_url: str = "") -> str:
+        if not raw_api_key:
+            raise ValueError("API key must have a value")
 
         payload_dict = {
             "key": raw_api_key.strip(),
-            "url": dashboard_url.strip()
+            "url": dashboard_url.strip() if dashboard_url else ""
         }
 
         try:
@@ -45,12 +45,13 @@ class SecurityManager:
             logging.error(f"Something went wrong during encryption: {e}")
             raise
 
+# Testing
 if __name__ == "__main__":
     print("Testing SecurityManager encryption with .env key")
 
     try:
         manager = SecurityManager()
-        secure_code = manager.encrypt_payload("abc-123-blah-blah", "https://dashboard.blah.com")
+        secure_code = manager.encrypt_payload("abc-123-blah-blah")
         print (f"Successfully generated configuration code:\t{secure_code}")
 
     except Exception as e:
