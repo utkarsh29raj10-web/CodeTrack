@@ -26,6 +26,20 @@ class AnimatedButton(ctk.CTkButton):
         if self.orig_border_color and self.orig_border_color != "transparent":
             self.configure(border_color=self.orig_border_color)
 
+class BackButton(AnimatedButton):
+    def __init__(self, parent, controller, target):
+        super().__init__(
+            parent,
+            text="Go Back",
+            width=60,
+            height=30,
+            fg_color="transparent",
+            hover_color="#27272a",
+            text_color="#F3F3F3",
+            font=ctk.CTkFont(size=13, weight="bold"),
+            command=lambda:controller.show_frame(target)
+        )
+
 class MainMenu(ctk.CTkFrame):
     def __init__(self, parent, controller):
         super().__init__(parent, fg_color=BG_COLOR)
@@ -126,6 +140,70 @@ class EnterpriseMenu(ctk.CTkFrame):
             command=lambda: print("Please wait...")
         )
         btn_employee.pack(pady=15, padx=60, fill="x")
+
+class EmployerScreen(ctk.CTkFrame):
+    def __init__(self, parent, controller):
+        super().__init__(parent, fg_color=BG_COLOR)
+        self.controller = controller
+
+        BackButton(self, self.controller, target="EnterpriseMenu").place(x=20, y=20)
+
+        title_label = ctk.CTkLabel(
+            self,
+            text="Employer Dashboard",
+            font=ctk.CTkFont(size=28, weight="bold"),
+            text_color="#F3F3F3"
+        )
+        title_label.pack(pady=(60,10))
+
+        subtitle = ctk.CTkLabel(
+            self,
+            text="Generate special encrypted keys for your employees.",
+            font=ctk.CTkFont(size=14),
+            text_color="#A1A1AA"
+        )
+        subtitle.pack(pady=(0,20))
+
+        self.entry_api = ctk.CTkEntry(
+            self,
+            placeholder_text = "Enter API key",
+            height = 45,
+            show="*"
+        )
+        self.entry_api.pack(fill="x", padx=60, pady=10)
+        self.entry_url=ctk.CTkEntry(
+            self,
+            placeholder_text="Enter Dashboard URL (optional)",
+            height=45
+        )
+        self.entry_url.pack(fill="x", padx=60, pady = 10)
+
+        self.entry_name = ctk.CTkEntry(
+            self,
+            placeholder_text="Enter Employee Name (Optional)",
+            height=45
+        )
+        self.entry_name.pack(fill="x", padx=60, pady=10)
+
+        btn_generate = AnimatedButton(
+            self,
+            text="Generate Shareable Encrypted Code",
+            height=50,
+            font=ctk.CTkFont(size=15, weight="bold"),
+            command=lambda: print("It will call security manager") #todo
+        )
+        btn_generate.pack(pady=15, padx=60, fill="x")
+
+        self.output_box = ctk.CTkTextbox(
+            self,
+            height=70,
+            fg_color="#09090b",
+            text_color="#34d399",
+            font=ctk.CTkFont(family="Courier", size=12)
+        )
+        self.output_box.pack(fill="x", padx=60, pady=(0,10))
+        self.output_box.insert("0.0", "Your encrypted code will appear here.")
+        self.output_box.configure(state="disabled")
 
 class CodeTrackApp(ctk.CTk):
     def __init__(self):
