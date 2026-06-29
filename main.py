@@ -1,0 +1,164 @@
+import customtkinter as ctk
+
+ctk.set_appearance_mode("Dark")
+ctk.set_default_color_theme("blue")
+
+BG_COLOR = "#18181B"
+
+class AnimatedButton(ctk.CTkButton):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.orig_text_color = self.cget("text_color")
+        self.orig_border_color = self.cget("border_color")
+
+        self.bind("<Button-1>", self.on_press)
+        self.bind('<ButtonRelease-1>', self.on_release)
+
+    def on_press(self, event):
+        self.configure(text_color="white")
+        if self.orig_border_color and self.orig_border_color != "transparent":
+            self.configure(border_color="#52525b")
+
+    def on_release(self, event):
+        self.configure(text_color=self.orig_text_color)
+
+        if self.orig_border_color and self.orig_border_color != "transparent":
+            self.configure(border_color=self.orig_border_color)
+
+class MainMenu(ctk.CTkFrame):
+    def __init__(self, parent, controller):
+        super().__init__(parent, fg_color=BG_COLOR)
+        self.controller = controller
+
+        title_label = ctk.CTkLabel(
+            self,
+            text="Welcome to CodeTrack",
+            font = ctk.CTkFont(size=28, weight="bold"),
+            text_color="#F3F3F3"
+        )
+        title_label.pack(pady=(50,20))
+
+        subtitle = ctk.CTkLabel(
+            self,
+            text = "Choose your setup mode to begin",
+            font = ctk.CTkFont(size=16),
+            text_color="#A1A1AA"
+        )
+        subtitle.pack(pady=(0,40))
+
+        btn_enterprise = AnimatedButton(
+            self,
+            text="Enterprise Mode (For Companies)",
+            height = 50,
+            font = ctk.CTkFont(size=15, weight="bold"),
+            command = lambda: self.controller.show_frame("EnterpriseMenu"),
+        )
+        btn_enterprise.pack(pady=15, padx=60, fill="x")
+
+        btn_indep = AnimatedButton(
+            self,
+            text="Independent Mode (For Freelancers/Personal Use)",
+            height=50,
+            fg_color = BG_COLOR,
+            border_color="#3b82f6",
+            border_width = 2,
+            hover_color="#27272a",
+            text_color="#FFFFFF",
+            font = ctk.CTkFont(size=15, weight="bold"),
+            command = lambda: print("Taking you to the Independent Segment")
+        )
+        btn_indep.pack(pady=15, padx=60, fill="x")
+
+class EnterpriseMenu(ctk.CTkFrame):
+    def __init__(self, parent, controller):
+        super().__init__(parent, fg_color=BG_COLOR)
+        self.controller = controller
+
+        btn_back = AnimatedButton(
+            self,
+            text="Go Back",
+            width=60,
+            height=30,
+            fg_color="transparent",
+            hover_color="#27272a",
+            text_color="#F3F3F3",
+            font=ctk.CTkFont(size=13, weight="bold"),
+            command=lambda:self.controller.show_frame("MainMenu")
+        )
+        btn_back.place(x=20, y=20)
+
+        title_label = ctk.CTkLabel(
+            self,
+            text="Enterprise Setup",
+            font=ctk.CTkFont(size=28, weight="bold"),
+            text_color="#F3F3F3"
+        )
+        title_label.pack(pady=(70, 20))
+
+        subtitle = ctk.CTkLabel(
+            self,
+            text="Are you an employee or a new employer?",
+            font = ctk.CTkFont(size=14),
+            text_color="#A1A1AA"
+        )
+        subtitle.pack(pady=(0,40))
+
+        btn_employer = AnimatedButton(
+            self,
+            text="I am an Employer",
+            height=50,
+            font=ctk.CTkFont(size=15, weight="bold"),
+            command=lambda: print("Please wait...")
+        )
+        btn_employer.pack(pady=15, padx=60, fill="x")
+
+        btn_employee = AnimatedButton(
+            self,
+            text="I am an Employee",
+            height=50,
+            fg_color=BG_COLOR,
+            border_color="#3b82f6",
+            border_width=2,
+            hover_color="#27272a",
+            text_color="#ffffff",
+            font=ctk.CTkFont(size=15, weight="bold"),
+            command=lambda: print("Please wait...")
+        )
+        btn_employee.pack(pady=15, padx=60, fill="x")
+
+class CodeTrackApp(ctk.CTk):
+    def __init__(self):
+        super().__init__()
+
+        self.configure(fg_color=BG_COLOR)
+
+        self.title("CodeTrack Setup")
+        self.geometry("600x450")
+        self.resizable(False, False)
+
+        self.container = ctk.CTkFrame(self, fg_color=BG_COLOR)
+        self.container.pack(side="top", fill="both", expand=True)
+
+        self.frames = {}
+        self.current_frame = None
+
+        for F in (MainMenu, EnterpriseMenu):
+            page_name = F.__name__
+            frame = F(parent=self.container, controller=self)
+            self.frames[page_name] = frame
+
+        self.show_frame("MainMenu")
+
+    def show_frame(self, page_name: str):
+        if self.current_frame is not None:
+            self.current_frame.pack_forget()
+
+        frame = self.frames[page_name]
+        frame.pack(fill="both", expand=True)
+
+        self.current_frame = frame
+
+if __name__ == "__main__":
+    app = CodeTrackApp()
+    app.mainloop()
