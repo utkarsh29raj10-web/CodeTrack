@@ -65,6 +65,7 @@ class MainMenu(ctk.CTkFrame):
             self,
             text="Enterprise Mode (For Companies)",
             height = 50,
+            text_color="#FFFFFF",
             font = ctk.CTkFont(size=15, weight="bold"),
             command = lambda: self.controller.show_frame("EnterpriseMenu"),
         )
@@ -80,7 +81,7 @@ class MainMenu(ctk.CTkFrame):
             hover_color="#27272a",
             text_color="#FFFFFF",
             font = ctk.CTkFont(size=15, weight="bold"),
-            command = lambda: print("Taking you to the Independent Segment")
+            command = lambda: self.controller.show_frame("IndependentScreen")
         )
         btn_indep.pack(pady=15, padx=60, fill="x")
 
@@ -123,7 +124,7 @@ class EnterpriseMenu(ctk.CTkFrame):
             text="I am an Employer",
             height=50,
             font=ctk.CTkFont(size=15, weight="bold"),
-            command=lambda: print("Please wait...")
+            command=lambda: self.controller.show_frame("EmployerScreen")
         )
         btn_employer.pack(pady=15, padx=60, fill="x")
 
@@ -137,7 +138,7 @@ class EnterpriseMenu(ctk.CTkFrame):
             hover_color="#27272a",
             text_color="#ffffff",
             font=ctk.CTkFont(size=15, weight="bold"),
-            command=lambda: print("Please wait...")
+            command=lambda: self.controller.show_frame("EmployeeScreen")
         )
         btn_employee.pack(pady=15, padx=60, fill="x")
 
@@ -150,7 +151,7 @@ class EmployerScreen(ctk.CTkFrame):
 
         title_label = ctk.CTkLabel(
             self,
-            text="Employer Dashboard",
+            text="Employer Setup",
             font=ctk.CTkFont(size=28, weight="bold"),
             text_color="#F3F3F3"
         )
@@ -205,6 +206,88 @@ class EmployerScreen(ctk.CTkFrame):
         self.output_box.insert("0.0", "Your encrypted code will appear here.")
         self.output_box.configure(state="disabled")
 
+class EmployeeScreen(ctk.CTkFrame):
+    def __init__(self, parent, controller):
+        super().__init__(parent, fg_color=BG_COLOR)
+        self.controller = controller
+
+        BackButton(self, self.controller, target="EnterpriseMenu").place(x=20, y=20)
+
+        title_label = ctk.CTkLabel(
+            self,
+            text="Employee Setup",
+            font=ctk.CTkFont(size=28, weight="bold"),
+            text_color="#F3F3F3"
+        )
+        title_label.pack(pady=(60,10))
+
+        subtitle = ctk.CTkLabel(
+            self,
+            text="Paste the secret code provided by your employer",
+            font=ctk.CTkFont(size=14),
+            text_color="#A1A1AA"
+        )
+        subtitle.pack(pady=(0,20))
+
+        self.entry_code = ctk.CTkEntry(
+            self,
+            placeholder_text="Enter Secure Code", height=45
+        )
+        self.entry_code.pack(fill="x", padx=60, pady=10)
+
+        self.entry_name = ctk.CTkEntry(
+            self,
+            placeholder_text="Enter your Full Name (Optional)",
+            height=45
+        )
+        self.entry_name.pack(fill="x", padx=60, pady=10)
+
+        btn_install = AnimatedButton(
+            self,
+            text="Install & Connect",
+            height=50,
+            font=ctk.CTkFont(size=15, weight="bold"),
+            command=lambda: print("installer logic later")
+        )
+        btn_install.pack(pady=15, padx=60, fill="x")
+
+class IndependentScreen(ctk.CTkFrame):
+    def __init__(self, parent, controller):
+        super().__init__(parent, fg_color=BG_COLOR)
+        self.controller = controller
+
+        BackButton(self, self.controller, target="MainMenu").place(x=20, y=20)
+        title_label = ctk.CTkLabel(
+            self, text="Independent Setup",
+            font=ctk.CTkFont(size=28, weight="bold"),
+            text_color="#F3F3F3"
+        )
+        title_label.pack(pady=(70,10))
+
+        subtitle = ctk.CTkLabel(
+            self, text="Setup CodeTrack for your personal projects",
+            font=ctk.CTkFont(size=14),
+            text_color="#A1A1AA"
+        )
+        subtitle.pack(pady=(0,30))
+
+        self.entry_api = ctk.CTkEntry(
+            self,
+            placeholder_text="Enter WakaTime API Key",
+            height=45,
+            show="*"
+        )
+        self.entry_api.pack(fill="x", padx=60, pady=10)
+
+        btn_install = AnimatedButton(
+            self,
+            text="Install Engine",
+            height=50,
+            font=ctk.CTkFont(size=15, weight="bold"),
+            command=lambda: print("installer later")
+        )
+        btn_install.pack(pady=20, padx=60, fill="x")
+
 class CodeTrackApp(ctk.CTk):
     def __init__(self):
         super().__init__()
@@ -221,7 +304,7 @@ class CodeTrackApp(ctk.CTk):
         self.frames = {}
         self.current_frame = None
 
-        for F in (MainMenu, EnterpriseMenu):
+        for F in (MainMenu, EnterpriseMenu, EmployerScreen, EmployeeScreen, IndependentScreen):
             page_name = F.__name__
             frame = F(parent=self.container, controller=self)
             self.frames[page_name] = frame
