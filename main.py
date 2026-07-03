@@ -30,13 +30,13 @@ class BackButton(AnimatedButton):
     def __init__(self, parent, controller, target):
         super().__init__(
             parent,
-            text="Go Back",
+            text="←",
             width=60,
-            height=30,
+            height=50,
             fg_color="transparent",
             hover_color="#27272a",
             text_color="#F3F3F3",
-            font=ctk.CTkFont(size=13, weight="bold"),
+            font=ctk.CTkFont(size=20, weight="bold"),
             command=lambda:controller.show_frame(target)
         )
 
@@ -90,18 +90,7 @@ class EnterpriseMenu(ctk.CTkFrame):
         super().__init__(parent, fg_color=BG_COLOR)
         self.controller = controller
 
-        btn_back = AnimatedButton(
-            self,
-            text="Go Back",
-            width=60,
-            height=30,
-            fg_color="transparent",
-            hover_color="#27272a",
-            text_color="#F3F3F3",
-            font=ctk.CTkFont(size=13, weight="bold"),
-            command=lambda:self.controller.show_frame("MainMenu")
-        )
-        btn_back.place(x=20, y=20)
+        BackButton(self, self.controller, target="MainMenu").place(x=20, y=20)
 
         title_label = ctk.CTkLabel(
             self,
