@@ -1,4 +1,9 @@
 import customtkinter as ctk
+import tkinter.messagebox as messagebox
+import threading
+from core.security import SecurityManager
+from core.config import ConfigManager
+from core.installer import Installer
 
 ctk.set_appearance_mode("Dark")
 ctk.set_default_color_theme("blue")
@@ -180,7 +185,7 @@ class EmployerScreen(ctk.CTkFrame):
             text="Generate Shareable Encrypted Code",
             height=50,
             font=ctk.CTkFont(size=15, weight="bold"),
-            command=lambda: print("It will call security manager") #todo
+            command=self.generate_code
         )
         btn_generate.pack(pady=15, padx=60, fill="x")
 
@@ -194,6 +199,28 @@ class EmployerScreen(ctk.CTkFrame):
         self.output_box.pack(fill="x", padx=60, pady=(0,10))
         self.output_box.insert("0.0", "Your encrypted code will appear here.")
         self.output_box.configure(state="disabled")
+
+    def generate_code(self):
+        api_key = self.entry_api.get().strip()
+        url = self.entry_url.get().strip()
+        name = self.entry_name.get().strip()
+
+        if not api_key:
+            messagebox.showerror("Error", "API Key is mandatory")
+
+        try:
+            sec_manager = SecurityManager()
+            encrypted_str = sec_manager.encrypt_payload(api_key, url, name)
+
+            self.output_box.configure(state="normal")
+            self.output_box.delete("0.0", "end")
+            self.output_box.insert("0.0", encrypted_str)
+            self.output_box.configure(state="disabled")
+
+            messagebox.showinfo("Success", "Secure configuration code generated")
+
+        except Exception as e:
+            messagebox.showerror("Error", f"Encryption failed:\t{str(e)}")
 
 class EmployeeScreen(ctk.CTkFrame):
     def __init__(self, parent, controller):
@@ -236,9 +263,40 @@ class EmployeeScreen(ctk.CTkFrame):
             text="Install & Connect",
             height=50,
             font=ctk.CTkFont(size=15, weight="bold"),
-            command=lambda: print("installer logic later")
+            command=self.install_wakatime
         )
         btn_install.pack(pady=15, padx=60, fill="x")
+
+    def install_wakatime(self):
+        code = self.entry_code.get().strip()
+        name = self.entry_name.get().strip()
+
+        if not code:
+            messagebox.showerror("Error", "Secure code is mandatory")
+            return
+
+        def _run_install():
+            try:
+                sec_manager = SecurityManager()
+                payload = sec_manager.decrypt_payload(code)
+
+                api_key = payload.get("key")
+                url = payload.get("url")
+                emp_name = payload.get("name") or name
+
+                config_manager = ConfigManager()
+                config_manager.write_config(api_key, url, emp_name)
+
+                installer = Installer()
+                installer.download_cli()
+                installer.inject_vscode_plugin()
+
+                messagebox.showinfo("Success", "Installation successful.")
+
+            except Exception as e:
+                messagebox.showerror("Error", f"Installation failed:\t{str(e)}")
+
+        threading.Thread(target=_run_install).start()
 
 class IndependentScreen(ctk.CTkFrame):
     def __init__(self, parent, controller):
@@ -273,9 +331,32 @@ class IndependentScreen(ctk.CTkFrame):
             text="Install Engine",
             height=50,
             font=ctk.CTkFont(size=15, weight="bold"),
-            command=lambda: print("installer later")
+            command=self.install_wakatime
         )
         btn_install.pack(pady=20, padx=60, fill="x")
+
+    def install_wakatime(self):
+        api_key = self.entry_api.get().strip()
+
+        if not api_key:
+            messagebox.showerror("Error", "API key is mandatory")
+            return
+
+        def _run_install():
+            try:
+                config_manager = ConfigManager()
+                config_manager.write_config(api_key=api_key)
+
+                installer = Installer()
+                installer.download_cli()
+                installer.inject_vscode_plugin()
+
+                messagebox.showinfo("Success", "Installation successful")
+
+            except Exception as e:
+                messagebox.showerror("Error", f"Installation failed:\t{str(e)}")
+
+        threading.Thread(target=_run_install).start()
 
 class CodeTrackApp(ctk.CTk):
     def __init__(self):
@@ -284,8 +365,8 @@ class CodeTrackApp(ctk.CTk):
         self.configure(fg_color=BG_COLOR)
 
         self.title("CodeTrack Setup")
-        self.geometry("600x450")
-        self.resizable(False, False)
+        self.geometry("800x600")
+        self.resizable(True, True)
 
         self.container = ctk.CTkFrame(self, fg_color=BG_COLOR)
         self.container.pack(side="top", fill="both", expand=True)
