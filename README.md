@@ -34,8 +34,7 @@ VS Code plugin is automatically installed.
 
 ### Cross-Platform
 - Available as a mac .app
-- Available as a windows .exe
-###### For Linux in next release
+###### For Windows & Linux in future release
 
 # Tech Stack
 - **Language:** Python
@@ -51,26 +50,55 @@ VS Code plugin is automatically installed.
 # Future
 
 ### Version 0.2
-- Improved security for key via cloud verification
 - More IDE detection and customizable, automatic plugin installation
+- Windows app
 
 ### Version 0.3
 - Multi-user generation for employers
+- Linux release
 
 ### Version 0.4 
 - Dashboard with three views: Employers, Employees, Independent and maybe a 4th shared view
 
 ### Version 1.0
 - UI overhaul as currently, it looks pretty ugly imo. It is only a prototype for now, a stepping stone.
+- Improved security for key via cloud verification
 
-# AI is used for:
+# For Beest Reviewers
+
+## AI is used for:
 This is detailed information but the overall amount for each case is not significant. Thus, total AI usage will remain well under 15-20%
 - Project Development Plan
 - Initial guide to explain me how I can pull this off with hackatime
 - Taught myself basics of automated testing and AI acted as an example guide for first test
 - Writing github workflow for windows executable
 
-# Screenshots
+## File Structure
+- All antigravity files, other AI files and other random files' time was tracked. And when I say all, I mean **ALL**. Even the files which have nothing to do with this or any project for that matter.
+- I was instructed to mention this and the file structure of my project so that the reviewer cna cut time accordingly. 
+
+##### So here's the file structure:
+
+```text
+Codetrack/
+├── main.py                  
+├── README.md                 
+├── build_secrets.py         
+├── requirements.txt         
+├── tests/                    
+│   ├── test_config.py            
+│   └── test_security.py
+├── core/                    
+│   ├── config.py            
+│   ├── installer.py         
+│   ├── secrets.py           
+│   └── security.py                    
+├── .github/
+│   └── workflows/
+│       └── build-windows.yml 
+```
+
+## Screenshots
 <img width="912" height="744" alt="Screenshot 2026-07-11 at 4 14 46 PM" src="https://github.com/user-attachments/assets/1fa6fe2e-5571-4795-a94b-6284d52375ac" />
 <img width="912" height="744" alt="Screenshot 2026-07-11 at 4 12 58 PM" src="https://github.com/user-attachments/assets/a88a3942-1502-4b96-b9aa-8e569f8753af" />
 <img width="912" height="744" alt="Screenshot 2026-07-11 at 4 12 54 PM" src="https://github.com/user-attachments/assets/43da2dce-ce90-450f-a18a-f93573a283ee" />
