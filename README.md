@@ -69,3 +69,10 @@ This is detailed information but the overall amount for each case is not signifi
 - Initial guide to explain me how I can pull this off with hackatime
 - Taught myself basics of automated testing and AI acted as an example guide for first test
 - Writing github workflow for windows executable
+
+# Screenshots
+<img width="912" height="744" alt="Screenshot 2026-07-11 at 4 14 46 PM" src="https://github.com/user-attachments/assets/1fa6fe2e-5571-4795-a94b-6284d52375ac" />
+<img width="912" height="744" alt="Screenshot 2026-07-11 at 4 12 58 PM" src="https://github.com/user-attachments/assets/a88a3942-1502-4b96-b9aa-8e569f8753af" />
+<img width="912" height="744" alt="Screenshot 2026-07-11 at 4 12 54 PM" src="https://github.com/user-attachments/assets/43da2dce-ce90-450f-a18a-f93573a283ee" />
+<img width="912" height="744" alt="Screenshot 2026-07-11 at 4 12 52 PM" src="https://github.com/user-attachments/assets/470918f3-b2b0-4701-b978-973feb8af453" />
+<img width="912" height="744" alt="Screenshot 2026-07-11 at 4 12 50 PM" src="https://github.com/user-attachments/assets/ffa25f30-80f6-402a-8ce7-2eecebb04d98" />
