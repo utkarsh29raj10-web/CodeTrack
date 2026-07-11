@@ -4,9 +4,8 @@ import urllib.request
 import zipfile
 import stat
 import logging
-from os import WNOWAIT
 import ssl
-
+ssl._create_default_https_context = ssl._create_unverified_context
 logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
 
 class Installer:
