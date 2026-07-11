@@ -3,16 +3,16 @@ import json
 import logging
 from cryptography.fernet import Fernet
 from cryptography.exceptions import InvalidKey
-from dotenv import load_dotenv
+from core import secrets
 from cryptography.fernet import InvalidToken
-
-load_dotenv()
+import ssl
+ssl._create_default_https_context = ssl._create_unverified_context
 
 logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
 
 class SecurityManager:
     def __init__(self):
-        raw_key = os.getenv("MASTER_KEY")
+        raw_key = getattr(secrets, "MASTER_KEY", None)
 
         if not raw_key:
             logging.error("key env var is missing. Fix it")

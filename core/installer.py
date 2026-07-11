@@ -5,6 +5,7 @@ import zipfile
 import stat
 import logging
 from os import WNOWAIT
+import ssl
 
 logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
 
@@ -37,7 +38,9 @@ class Installer:
         logging.info(f"Downloading")
 
         try:
-            urllib.request.urlretrieve(url, zip_path)
+            context = ssl._create_unverified_context()
+            with urllib.request.urlopen(url, context=context) as response, open(zip_path, 'wb') as out_file:
+                out_file.write(response.read())
             with zipfile.ZipFile(zip_path, 'r') as zip_ref:
                 extracted_name = zip_ref.namelist()[0]
                 zip_ref.extractall(self.wakatime_dir)
