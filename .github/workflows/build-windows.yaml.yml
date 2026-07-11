@@ -1,0 +1,71 @@
+name: Build Windows Executable
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pyinstaller pyarmor
+
+      - name: Inject Secure Master Key
+        shell: bash
+        run: |
+          echo "MASTER_KEY = '${{secrets.MASTER_KEY}}'" > core/secrets.py
+
+      - name: Obfuscate Source Code
+        run: |
+          pyarmor gen -O obf_dist main.py core/
+
+      - name: Generate Dummy Imports File
+        shell: bash
+        working-directory: ./obf_dist
+        run: |
+          cat << 'EOF' > imports.py
+          import customtkinter
+          import cryptography
+          import urllib.request
+          import ssl
+          import zipfile
+          import json
+          import configparser
+          import threading
+          import stat
+          import platform
+          import os
+          import logging
+          from cryptography.fernet import Fernet
+          import core.security
+          import core.installer
+          import core.config
+          import core.secrets
+          EOF
+
+      - name: Package Executable with PyInstaller
+        working-directory: ./obf_dist
+        run: |
+          pyinstaller --noconfirm --onefile --windowed --name "CodeTrack" --hidden-import imports --collect-all customtkinter main.py
+
+      - name: Upload Windows Build
+        uses: actions/upload-artifact@v4
+        with:
+          name: CodeTrack-Windows-v0.1
+          path: obf_dist/dist/CodeTrack.exe
+
+
