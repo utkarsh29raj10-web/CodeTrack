@@ -81,7 +81,9 @@ This is detailed information but the overall amount for each case is not signifi
 
 ```text
 Codetrack/
-├── main.py                  
+├── main.py   
+├── .env
+├── .gitignore                     
 ├── README.md                 
 ├── build_secrets.py         
 ├── requirements.txt         
