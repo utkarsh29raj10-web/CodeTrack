@@ -64,6 +64,70 @@ VS Code plugin is automatically installed.
 - UI overhaul as currently, it looks pretty ugly imo. It is only a prototype for now, a stepping stone.
 - Improved security for key via cloud verification
 
+# How to Run Locally (macOS)
+
+### 1. Environment Setup
+**Clone the repository**
+```bash
+git clone https://github.com/utkarsh29raj10-web/CodeTrack.git
+cd CodeTrack
+```
+
+**Create and activate a Python virtual environment**
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+```
+
+**Install the required dependencies and tools**
+```bash
+pip install -r requirements.txt
+pip install pyarmor pyinstaller
+```
+
+**Secure Key**
+Create a ".env" file in your root folder containing `MASTER_KEY="your_secure_key"` which can be a randomly generated key. 
+Then run this script to safely inject it into the source code:
+```bash
+python build_secrets.py
+```
+
+**Code Obfuscation**
+Protect the source code and your embedded keys from reverse engineering by obfuscating the project with PyArmor:
+```bash
+pyarmor gen -O obf_dist main.py core/
+```
+
+**Build Configuration**
+Inside the `obf_dist` folder, create a file named `imports.py` and paste this:
+```python
+import customtkinter
+import cryptography
+import urllib.request
+import ssl
+import zipfile
+import json
+import configparser
+import threading
+import stat
+import platform
+import os
+import logging
+from cryptography.fernet import Fernet
+import core.security
+import core.installer
+import core.config
+import core.secrets
+```
+
+**App Compilation**
+Compile the obfuscated code into a macOS ".app":
+```bash
+cd obf_dist
+pyinstaller --clean --windowed --name "CodeTrack" --hidden-import imports --collect-all customtkinter main.py
+```
+Find and run the app from here: `root/obf_dist/dist/CodeTrack.app`.
+
 # For Beest Reviewers
 
 ## AI is used for:
