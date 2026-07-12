@@ -44,8 +44,8 @@ VS Code plugin is automatically installed.
 - **Code Obfuscation:** PyArmor 8
 - **Deployment:** PyInstaller, GitHub Actions
 
-# Minor Issues
-- None that I've found for now.
+# Known Issues
+- Windows app still has bugs to fix which will be fixed & released as Version 0.2 in the next ship.
 
 # Future
 
@@ -129,7 +129,7 @@ pyinstaller --clean --windowed --name "CodeTrack" --hidden-import imports --coll
 Find and run the app from here: `root/obf_dist/dist/CodeTrack.app`.
 
 # For Beest Reviewers
-
+### Please mind the known issues mentioned earlier (applicable to this and future ships)
 ## AI is used for:
 This is detailed information but the overall amount for each case is not significant. Thus, total AI usage will remain well under 15-20%
 - Project Development Plan
